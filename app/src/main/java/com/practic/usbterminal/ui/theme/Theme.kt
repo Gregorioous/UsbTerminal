@@ -1,70 +1,123 @@
 package com.practic.usbterminal.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val DarkColorPalette = darkColors(
+    primary = Teal900,
+    primaryVariant = Teal900Dark,
+    onPrimary = White,
+    secondary = GummyDolphins,
+    secondaryVariant = OceanBlue,
+    onSecondary = Black,
+    background = Black,
+    onBackground = White,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val LightColorPalette = lightColors(
+    primary = Teal900,
+    primaryVariant = Teal900Dark,
+    onPrimary = White,
+    secondary = GummyDolphins,
+    secondaryVariant = OceanBlue,
+    onSecondary = Black,
+    background = White,
+    onBackground = Black,
 )
+
+@Immutable
+data class ExtendedColors(
+    val contextualAppBarBackground: Color,
+    val contextualAppBarOnBackground: Color,
+    val ledColorWhenConnected: Color,
+    val ledColorWhenDisconnected: Color,
+    val textColorWhenConnected: Color,
+    val textColorWhenDisconnected: Color,
+    val statusLineBackgroundColor: Color,
+    val statusLineTextColor: Color,
+    val statusLineDividerColor: Color,
+    val textToXmitInputFieldBackgroundColor: Color,
+    val textToXmitInputFieldBorderColor: Color,
+    val ctrlButtonsLineBackgroundColor: Color,
+)
+
+private val LocalExtendedColors = staticCompositionLocalOf {
+    ExtendedColors(
+        contextualAppBarBackground = ContextualAppBarBackgroundColor,
+        contextualAppBarOnBackground = ContextualAppBarOnBackgroundColor,
+        ledColorWhenConnected = LedColorWhenConnected,
+        ledColorWhenDisconnected = LedColorWhenDisconnected,
+        textColorWhenConnected = TextColorWhenConnected,
+        textColorWhenDisconnected = TextColorWhenDisconnectedForLightTheme,
+        statusLineBackgroundColor = Color.Black,
+        statusLineTextColor = Color.LightGray,
+        statusLineDividerColor = Color.Transparent,
+        textToXmitInputFieldBackgroundColor = Color.Transparent,
+        textToXmitInputFieldBorderColor = Color.Transparent,
+        ctrlButtonsLineBackgroundColor = Color.DarkGray,
+    )
+}
+
+object UsbTerminalTheme {
+    val extendedColors: ExtendedColors
+        @Composable get() = LocalExtendedColors.current
+}
 
 @Composable
 fun UsbTerminalTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
+    val colors = if (isDarkTheme) {
+        DarkColorPalette
+    } else {
+        LightColorPalette
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    val extendedColors = if (isDarkTheme) {
+        ExtendedColors(
+            contextualAppBarBackground = ContextualAppBarBackgroundColor,
+            contextualAppBarOnBackground = ContextualAppBarOnBackgroundColor,
+            ledColorWhenConnected = LedColorWhenConnected,
+            ledColorWhenDisconnected = LedColorWhenDisconnected,
+            textColorWhenConnected = TextColorWhenConnected,
+            textColorWhenDisconnected = TextColorWhenDisconnectedForDarkTheme,
+            statusLineBackgroundColor = Color.Black,
+            statusLineTextColor = Color.LightGray,
+            statusLineDividerColor = Color.Gray,
+            textToXmitInputFieldBackgroundColor = TextToXmitInputFieldBackgroundColorForDarkTheme,
+            textToXmitInputFieldBorderColor = textToXmitInputFieldBorderColorForDarkTheme,
+            ctrlButtonsLineBackgroundColor = Color.DarkGray,
+        )
+    } else {
+        ExtendedColors(
+            contextualAppBarBackground = ContextualAppBarBackgroundColor,
+            contextualAppBarOnBackground = ContextualAppBarOnBackgroundColor,
+            ledColorWhenConnected = LedColorWhenConnected,
+            ledColorWhenDisconnected = LedColorWhenDisconnected,
+            textColorWhenConnected = TextColorWhenConnected,
+            textColorWhenDisconnected = TextColorWhenDisconnectedForLightTheme,
+            statusLineBackgroundColor = Color.Black,
+            statusLineTextColor = Color.LightGray,
+            statusLineDividerColor = Color.Transparent,
+            textToXmitInputFieldBackgroundColor = TextToXmitInputFieldBackgroundColorForLightTheme,
+            textToXmitInputFieldBorderColor = textToXmitInputFieldBorderColorForLightTheme,
+            ctrlButtonsLineBackgroundColor = Color.DarkGray,
+        )
+    }
+
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colors = colors,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 }

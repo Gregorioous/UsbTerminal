@@ -3,41 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.USB_PERMISSION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="true"/>
+        android:required="true"
+        tools:ignore="DuplicateUsesFeature" />
 
     <application
+        android:name=".UsbTerminalApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UsbTerminal"
         tools:targetApi="31">
+
         <activity
-            android:name=".main.MainActivity"
+            android:name="com.practic.usbterminal.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.UsbTerminal">
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.UsbTerminal"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
-
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
+
+        <service
+            android:name="com.practic.usbterminal.usbcommservice.UsbCommService"
+            android:description="@string/usb_communication_service_description"
+            android:exported="false" />
+
     </application>
 
 </manifest>
