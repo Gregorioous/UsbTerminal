@@ -4,9 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
-val Teal900 = Color(0xff004d40)
-val Teal900Light = Color(0xff39796b)
-val Teal900Dark = Color(0xff00251a)
+val Teal900 = Color(0xFF001F4D)
+val Teal900Light = Color(0xFF397279)
+val Teal900Dark = Color(0xFF011B31)
 val LightGreen400 = Color(0xff9ccc65)
 val LightGreen400Light = Color(0xffcfff95)
 val LightGreen400Dark = Color(0xff6b9b37)

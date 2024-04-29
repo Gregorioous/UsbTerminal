@@ -26,7 +26,8 @@ abstract class UsbTerminalScreenAttributes(
                 DeviceListScreenAttributes.route -> DeviceListScreenAttributes
                 LogFilesListScreenAttributes.route -> LogFilesListScreenAttributes
                 SettingsScreenAttributes.route -> SettingsScreenAttributes
-                else -> throw IllegalArgumentException("Route $route is not recognized.")
+                null -> TerminalScreenAttributes
+                else -> TerminalScreenAttributes
             }
     }
 }

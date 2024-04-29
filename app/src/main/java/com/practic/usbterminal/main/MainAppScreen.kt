@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.practic.usbterminal.utill.collectAsStateLifecycleAware
 import kotlinx.coroutines.CoroutineScope
@@ -24,25 +25,12 @@ fun MainAppScreen(viewModel: MainViewModel, onBackPressedDispatcher: OnBackPress
     val navHostController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
-    val backstackEntry = navHostController.currentBackStackEntry
-    if (backstackEntry != null) {
-        val destination = backstackEntry.destination
-        val route = destination.route
-        if (route != null) {
-            val currentScreenAttributes = UsbTerminalScreenAttributes.fromRoute(route)
-        } else {
-            throw IllegalArgumentException("Route is null.")
-        }
-    } else {
-        throw IllegalArgumentException("BackStackEntry is null.")
-    }
-    val currentScreenAttributes = backstackEntry.destination.route?.let { route ->
-        UsbTerminalScreenAttributes.fromRoute(route)
-    } ?: throw IllegalArgumentException("Route is null.")
+    val backstackEntry by navHostController.currentBackStackEntryAsState()
+    val currentScreenAttributes =
+        UsbTerminalScreenAttributes.fromRoute(backstackEntry?.destination?.route)
     val isTopBarInContextualMode by viewModel.isTopBarInContextualMode.collectAsStateLifecycleAware()
     val topBarTitleParams by viewModel.topBarTitle.collectAsStateLifecycleAware()
     val topBarTitle = stringResource(topBarTitleParams.fmtResId, *topBarTitleParams.params)
-
 
     SystemBackButtonHandler(
         enabled = !currentScreenAttributes.isTopInBackStack
@@ -135,7 +123,6 @@ fun onTopAppBarNavigationIconClick(
                 scaffoldState.drawerState.open()
             }
         }
-
         else -> navHostController.popBackStack()
     }
 }

@@ -752,13 +752,6 @@ class MainViewModel(
         usbCommService?.debug('2') ?: run { Timber.d("No usbCommService") }
     }
 
-    fun debugUpgradeMsg() {
-        _shouldShowUpgradeFromV1Msg.value = true
-    }
-
-    fun debugWelcomeMsg() {
-        _shouldShowWelcomeMsg.value = true
-    }
 
 
     class Factory(
