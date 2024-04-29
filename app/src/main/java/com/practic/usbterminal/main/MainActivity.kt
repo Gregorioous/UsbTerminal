@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.lifecycleScope
-import com.practic.usbterminal.screens.terminal.TerminalScreen
 import com.practic.usbterminal.ui.theme.UsbTerminalTheme
 import com.practic.usbterminal.ui.util.isDarkTheme
 import com.practic.usbterminal.utill.collectAsStateLifecycleAware
 import timber.log.Timber
 
-@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
@@ -50,7 +48,7 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme = isDarkTheme(settingsData.value)
             viewModel.setIsDarkTheme(isDarkTheme)
             UsbTerminalTheme(isDarkTheme) {
-                TerminalScreen(viewModel)
+                MainAppScreen(viewModel, onBackPressedDispatcher)
             }
             val density = LocalDensity.current
             WindowInsets.Companion.ime.getBottom(density)
@@ -61,7 +59,6 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         viewModel.onActivityResume()
     }
-
     override fun onPause() {
         super.onPause()
         viewModel.onActivityPause()
